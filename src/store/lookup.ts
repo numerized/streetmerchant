@@ -26,6 +26,7 @@ import {processBackoffDelay} from './model/helpers/backoff';
 import {sendNotification} from '../messaging';
 import {handleCaptchaAsync} from './captcha-handler';
 import useProxy from '@doridian/puppeteer-page-proxy';
+import {firebase} from './firebase';
 
 const inStock: Record<string, boolean> = {};
 
@@ -307,6 +308,7 @@ async function lookupIem(
   page: Page,
   link: Link
 ): Promise<number> {
+  const itemId = `${store.name}${link.brand}${link.series}${link.model}`;
   const givenWaitFor = store.waitUntil ? store.waitUntil : 'networkidle0';
   const response: HTTPResponse | null = await page.goto(link.url, {
     waitUntil: givenWaitFor,
@@ -322,6 +324,7 @@ async function lookupIem(
   if (await isItemInStock(store, page, link)) {
     const givenUrl =
       link.cartUrl && config.store.autoAddToCart ? link.cartUrl : link.url;
+    firebase.updateItemStock(`IN STOCK`, itemId, store.country, link.url, `${store.name} ${link.model}`);
     logger.info(`${Print.inStock(link, store, true)}\n${givenUrl}`);
 
     if (config.browser.open) {
@@ -363,7 +366,7 @@ async function handleResponse(
   if (!response) {
     logger.debug(Print.noResponse(link, store, true));
   }
-
+  const itemId = `${store.name}${link.brand}${link.series}${link.model}`;
   const successStatusCodes = store.successStatusCodes ?? [[0, 399]];
   let statusCode = response?.status() ?? 0;
   if (!isStatusCodeInRange(statusCode, successStatusCodes)) {
@@ -388,9 +391,11 @@ async function handleResponse(
           );
         }
       } else {
+        firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, `${store.name} ${link.model}`);
         logger.warn(Print.badStatusCode(link, store, statusCode, true));
       }
     } else {
+      firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, `${store.name} ${link.model}`);
       logger.warn(Print.badStatusCode(link, store, statusCode, true));
     }
   }
@@ -423,6 +428,8 @@ async function isItemInStock(
   page: Page,
   link: Link
 ): Promise<boolean> {
+  const itemId = `${store.name}${link.brand}${link.series}${link.model}`;
+
   const baseOptions: Selector = {
     requireVisible: false,
     selector: store.labels.container ?? 'body',
@@ -460,6 +467,7 @@ async function isItemInStock(
 
   if (store.labels.outOfStock) {
     if (await pageIncludesLabels(page, store.labels.outOfStock, baseOptions)) {
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }
@@ -473,6 +481,7 @@ async function isItemInStock(
     };
 
     if (!(await pageIncludesLabels(page, link.labels.inStock, options))) {
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }
@@ -486,6 +495,7 @@ async function isItemInStock(
     };
 
     if (!(await pageIncludesLabels(page, store.labels.inStock, options))) {
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }

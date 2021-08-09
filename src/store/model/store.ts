@@ -277,6 +277,7 @@ export type Store = {
   };
   labels: Labels;
   name: string;
+  country?: string;
   currency: '£' | '$' | '€' | 'R$' | 'kr.' | '';
   setupAction?: (browser: Browser) => void;
   /**
@@ -289,7 +290,6 @@ export type Store = {
   waitUntil?: PuppeteerLifeCycleEvent;
   minPageSleep?: number;
   maxPageSleep?: number;
-
   proxyList?: string[];
   currentProxyIndex?: number;
   captchaDeterrent?: CaptchaDeterrent;

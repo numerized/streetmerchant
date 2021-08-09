@@ -9,7 +9,7 @@ export const Amazon: Store = {
       'https://www.amazon.com/gp/goldbox?ref_=nav_cs_gb',
     ],
     searchTerms: ['goober', 'dungeons+and+dragons'],
-    searchUrl: 'https://www.amazon.com/s?k=%%s&i=todays-deals&ref=nb_sb_noss_2',
+    searchUrl: 'https://www.amazon.com/s?k=todays-deals&ref=nb_sb_noss_2',
   },
   currency: '$',
   labels: {
@@ -780,5 +780,6 @@ export const Amazon: Store = {
       url: 'https://www.amazon.com/dp/B07F84FJ1G',
     },
   ],
-  name: 'amazon',
+  name: 'amazon-us',
+  country: 'us'
 };

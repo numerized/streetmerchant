@@ -2,6 +2,15 @@ import {Store} from './store';
 
 export const AmazonUk: Store = {
   backoffStatusCodes: [403, 429, 503],
+  captchaDeterrent: {
+    hardLinks: [
+      'https://www.amazon.co.uk/Amazon-Video/b/?ie=UTF8&node=3010085031&ref_=nav_cs_prime_video_baf280adf21d4b1eb2a43724550299c1',
+      'https://www.amazon.co.uk/gp/new-releases/?ref_=nav_em_cs_newreleases_0_1_1_3',
+      'https://www.amazon.co.uk/gp/goldbox?ref_=nav_cs_gb',
+    ],
+    searchTerms: ['nutella', 'asterix'],
+    searchUrl: 'https://www.amazon.co.uk/s?k=shaver&ref=nb_sb_noss',
+  },
   currency: '£',
   labels: {
     captcha: {
@@ -714,4 +723,5 @@ export const AmazonUk: Store = {
     },
   ],
   name: 'amazon-uk',
+  country: 'gb'
 };

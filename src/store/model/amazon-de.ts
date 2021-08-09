@@ -570,4 +570,5 @@ export const AmazonDe: Store = {
     },
   ],
   name: 'amazon-de',
+  country: 'de'
 };

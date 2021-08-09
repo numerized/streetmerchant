@@ -43,6 +43,7 @@
     "cheerio": "^1.0.0-rc.10",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "firebase-admin": "^9.11.0",
     "messaging-api-telegram": "^1.0.4",
     "mqtt": "^4.2.8",
     "node-fetch": "^2.6.1",
