@@ -19,23 +19,46 @@ admin.initializeApp({
   databaseURL: 'https://ps5reserva.firebaseio.com',
 });
 
-const updateItemStock = async (itemStockStatus:string, itemId:string, country?:string, url?:string, name?:string) => {
+const updateItemStock = async (
+  itemStockStatus: string,
+  itemId: string,
+  country?: string,
+  url?: string,
+  store?: string,
+  brand?: string,
+  series?: string,
+  model?: string
+) => {
+  const name = `${brand} ${series} ${model}`;
+
+  const payload = {
+    country: country || null,
+    amazon_group: country || null,
+    bot_any: null,
+    to_find: null,
+    timeout: null,
+    store: `${store}`,
+    name: `${name}`,
+    brand: `${brand}`,
+    series: `${series}`,
+    model: `${model}`,
+    outage_number: 0,
+    found: itemStockStatus,
+    // found_captcha: found_captcha[0] ? found_captcha[0] : null,
+    timestamp: admin.database.ServerValue.TIMESTAMP,
+    status: 'done',
+    url: url,
+  };
+
+  await admin.database().ref(`ps5sm/${itemId}`).update(payload);
+
   await admin
     .database()
-    .ref(`ps5sm/${itemId}`)
-    .update({
-      country: country||null,
-      amazon_group: country||null,
-      bot_any: null,
-      to_find: null,
-      timeout: null,
-      name: `${name}`,
-      outage_number: 0,
-      found: itemStockStatus,
-      // found_captcha: found_captcha[0] ? found_captcha[0] : null,
+    .ref(`notificationsFreeToSend`)
+    .push({
+      ...payload,
+      found: 'MAYBE SOMETHING HERE! GO AND CHECK!!!',
       timestamp: admin.database.ServerValue.TIMESTAMP,
-      status: 'done',
-      url:url
     });
 };
 

@@ -324,7 +324,7 @@ async function lookupIem(
   if (await isItemInStock(store, page, link)) {
     const givenUrl =
       link.cartUrl && config.store.autoAddToCart ? link.cartUrl : link.url;
-    firebase.updateItemStock(`IN STOCK`, itemId, store.country, link.url, `${store.name} ${link.model}`);
+    firebase.updateItemStock(`IN STOCK`, itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
     logger.info(`${Print.inStock(link, store, true)}\n${givenUrl}`);
 
     if (config.browser.open) {
@@ -391,11 +391,11 @@ async function handleResponse(
           );
         }
       } else {
-        firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, `${store.name} ${link.model}`);
+        firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
         logger.warn(Print.badStatusCode(link, store, statusCode, true));
       }
     } else {
-      firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, `${store.name} ${link.model}`);
+      firebase.updateItemStock(`ERROR ${statusCode}`, itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
       logger.warn(Print.badStatusCode(link, store, statusCode, true));
     }
   }
@@ -467,7 +467,7 @@ async function isItemInStock(
 
   if (store.labels.outOfStock) {
     if (await pageIncludesLabels(page, store.labels.outOfStock, baseOptions)) {
-      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }
@@ -481,7 +481,7 @@ async function isItemInStock(
     };
 
     if (!(await pageIncludesLabels(page, link.labels.inStock, options))) {
-      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }
@@ -495,7 +495,7 @@ async function isItemInStock(
     };
 
     if (!(await pageIncludesLabels(page, store.labels.inStock, options))) {
-      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, `${store.name} ${link.model}`);
+      firebase.updateItemStock('OUT OF STOCK', itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
       logger.info(Print.outOfStock(link, store, true));
       return false;
     }
@@ -520,7 +520,7 @@ async function runCaptchaDeterrent(browser: Browser, store: Store, page: Page) {
   let statusCode = 0;
   let deterrentLinks: string[] = [];
 
-  logger.debug(`[${store.name}] Navigating to random anti-captcha page...`);
+  logger.info(`[${store.name}] Navigating to random anti-captcha page...`);
 
   if (store.captchaDeterrent?.hardLinks?.length) {
     deterrentLinks = deterrentLinks.concat(store.captchaDeterrent.hardLinks);
