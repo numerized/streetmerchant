@@ -31,6 +31,8 @@ const updateItemStock = async (
 ) => {
   const name = `${brand} ${series} ${model}`;
 
+  console.log(name, itemStockStatus)
+
   const payload = {
     country: country || null,
     amazon_group: country || null,
@@ -52,14 +54,16 @@ const updateItemStock = async (
 
   await admin.database().ref(`ps5sm/${itemId}`).update(payload);
 
-  await admin
-    .database()
-    .ref(`notificationsFreeToSend`)
-    .push({
-      ...payload,
-      found: 'MAYBE SOMETHING HERE! GO AND CHECK!!!',
-      timestamp: admin.database.ServerValue.TIMESTAMP,
-    });
+  if (itemStockStatus === 'IN STOCK') {
+    await admin
+      .database()
+      .ref(`notificationsFreeToSend`)
+      .push({
+        ...payload,
+        found: 'MAYBE SOMETHING HERE! GO AND CHECK!!!',
+        timestamp: admin.database.ServerValue.TIMESTAMP,
+      });
+  }
 };
 
 export const firebase = {admin, updateItemStock};

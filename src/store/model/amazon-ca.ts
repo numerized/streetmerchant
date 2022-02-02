@@ -1,6 +1,15 @@
 import {Store} from './store';
 
 export const AmazonCa: Store = {
+  captchaDeterrent: {
+    hardLinks: [
+      'https://www.amazon.ca/Best-Sellers-generic/zgbs/?ref_=nav_cs_bestsellers',
+      'https://www.amazon.ca/b?ie=UTF8&node=10235505011',
+      'https://www.amazon.ca/dp/B07FQ4XCR1/?_encoding=UTF8&ref_=sv_kinc_1',
+    ],
+    searchTerms: ['kindle', 'samsung'],
+    searchUrl: 'https://www.amazon.ca/s?k=shaver',
+  },
   currency: '$',
   labels: {
     captcha: {

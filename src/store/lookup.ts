@@ -438,18 +438,20 @@ async function isItemInStock(
 
   if (store.labels.captcha) {
     if (await pageIncludesLabels(page, store.labels.captcha, baseOptions)) {
-      logger.warn(Print.captcha(link, store, true));
+      logger.info(Print.captcha(link, store, true));
       if (config.captchaHandler.service && store.labels.captchaHandler) {
-        logger.debug(`[${store.name}] captcha handler called`);
+        logger.info(`[${store.name}] captcha handler called`);
         if (!(await handleCaptchaAsync(page, store))) {
-          logger.warn(`[${store.name}] captcha handler failed`);
+          logger.info(`[${store.name}] captcha handler failed`);
+          firebase.updateItemStock('CAPTCHA', itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
           return false;
         } else {
-          logger.debug(`[${store.name}] captcha handler done, checking item`);
+          logger.info(`[${store.name}] captcha handler done, checking item`);
           return await isItemInStock(store, page, link);
         }
       } else {
-        logger.debug(`[${store.name}] captcha handler skipped`);
+        logger.info(`[${store.name}] captcha handler skipped`);
+        firebase.updateItemStock('CAPTCHA', itemId, store.country, link.url, store.name, link.brand, link.series, link.model);
         await delay(getSleepTime(store));
         return false;
       }
