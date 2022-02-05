@@ -15,6 +15,10 @@ export const Saturn: Store = {
     outOfStock: [
       {
         container: '#root',
+        text: ['Dieser Artikel ist bald wieder verfügbar'],
+      },
+      {
+        container: '#root',
         text: ['Dieser Artikel ist aktuell nicht verfügbar.'],
       },
       {
