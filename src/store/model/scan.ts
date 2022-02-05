@@ -115,4 +115,5 @@ export const Scan: Store = {
   },
   name: 'scan',
   waitUntil: 'domcontentloaded',
+  country: 'de',
 };

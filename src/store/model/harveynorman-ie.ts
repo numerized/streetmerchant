@@ -26,4 +26,5 @@ export const HarveyNormanIE: Store = {
   ],
   name: 'harveynorman-ie',
   waitUntil: 'domcontentloaded',
+  country:'ie'
 };

@@ -23,4 +23,6 @@ export const JohnLewis: Store = {
     },
   ],
   name: 'johnlewis',
+  country:'gb'
+
 };

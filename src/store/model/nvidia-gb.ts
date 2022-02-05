@@ -45,4 +45,5 @@ export const NvidiaGB: Store = {
     },
   ],
   name: 'nvidia-gb',
+  country:'gb'
 };
